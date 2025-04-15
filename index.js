@@ -1,11 +1,11 @@
 // backend/index.js
-const express = require("express");
-const cors = require("cors");
-const bodyParser = require("body-parser");
-const { Configuration, OpenAIApi } = require("openai");
-const dotenv = require("dotenv");
-const fs = require("fs");
-const path = require("path");
+import express from "express";
+import cors from "cors";
+import bodyParser from "body-parser";
+import OpenAI from "openai";
+import dotenv from "dotenv";
+import fs from "fs";
+import path from "path";
 
 dotenv.config();
 
@@ -15,10 +15,9 @@ const PORT = process.env.PORT || 4000;
 app.use(cors());
 app.use(bodyParser.json());
 
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
 });
-const openai = new OpenAIApi(configuration);
 
 const dataFile = path.join("./", "history.json");
 
@@ -30,6 +29,10 @@ function saveToHistory(prompt, text, image_url) {
   fs.writeFileSync(dataFile, JSON.stringify(history, null, 2));
 }
 
+app.get("/", (req, res) => {
+  res.send("✅ Backend AI Văn Hóa đang hoạt động!");
+});
+
 app.post("/generate-content", async (req, res) => {
   const { prompt } = req.body;
 
@@ -38,7 +41,7 @@ app.post("/generate-content", async (req, res) => {
   }
 
   try {
-    const gptResponse = await openai.createChatCompletion({
+    const gptResponse = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: [
         {
@@ -52,15 +55,15 @@ app.post("/generate-content", async (req, res) => {
       ],
     });
 
-    const text = gptResponse.data.choices[0].message.content.trim();
+    const text = gptResponse.choices[0].message.content.trim();
 
-    const imageResponse = await openai.createImage({
+    const imageResponse = await openai.images.generate({
       prompt,
       n: 1,
       size: "1024x1024",
     });
 
-    const image_url = imageResponse.data.data[0].url;
+    const image_url = imageResponse.data[0].url;
 
     saveToHistory(prompt, text, image_url);
 
