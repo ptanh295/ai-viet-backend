@@ -1,11 +1,11 @@
 // backend/index.js
-import express from "express";
-import cors from "cors";
-import bodyParser from "body-parser";
-import { Configuration, OpenAIApi } from "openai";
-import dotenv from "dotenv";
-import fs from "fs";
-import path from "path";
+const express = require("express");
+const cors = require("cors");
+const bodyParser = require("body-parser");
+const { Configuration, OpenAIApi } = require("openai");
+const dotenv = require("dotenv");
+const fs = require("fs");
+const path = require("path");
 
 dotenv.config();
 
