@@ -1,0 +1,19 @@
+# ✅ Test script cho backend AI Văn Hóa
+# Sử dụng trực tiếp trong VS Code (REST Client plugin) hoặc Postman
+
+### GET root - kiểm tra sống/chết
+GET https://ai-viet-backend.onrender.com/
+
+### POST tạo nội dung từ prompt
+POST https://ai-viet-backend.onrender.com/generate-content
+Content-Type: application/json
+
+{
+  "prompt": "Lễ hội đền Hùng giữa rừng Phú Thọ"
+}
+
+### GET toàn bộ lịch sử
+GET https://ai-viet-backend.onrender.com/history
+
+### GET thống kê dashboard
+GET https://ai-viet-backend.onrender.com/dashboard-summary
