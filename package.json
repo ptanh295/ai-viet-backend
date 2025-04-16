@@ -1,5 +1,5 @@
 {
-  "name": "ai-viet-backend",
+  "name": "ai-viet-backend-gpt-only",
   "version": "1.1.0",
   "main": "index.js",
   "type": "module",

@@ -56,19 +56,11 @@ app.post("/generate-content", async (req, res) => {
 
     const text = gptResponse.choices[0].message.content.trim();
 
-    const imageResponse = await openai.images.generate({
-      prompt,
-      n: 1,
-      size: "1024x1024",
-    });
+    saveToHistory(prompt, text, null, category);
 
-    const image_url = imageResponse.data[0].url;
-
-    saveToHistory(prompt, text, image_url, category);
-
-    res.json({ text, image_url });
+    res.json({ text, image_url: null });
   } catch (err) {
-    console.error("Error generating content:", err);
+    console.error("Error generating GPT content:", err);
     res.status(500).json({ error: "Failed to generate content." });
   }
 });
@@ -109,6 +101,25 @@ app.get("/dashboard-summary", (req, res) => {
     res.json({ total, latest, trendingKeywords });
   } catch (err) {
     res.status(500).json({ error: "Unable to load dashboard data." });
+  }
+});
+
+app.get("/stats-by-category", (req, res) => {
+  try {
+    const history = fs.existsSync(dataFile)
+      ? JSON.parse(fs.readFileSync(dataFile))
+      : [];
+
+    const stats = {};
+    history.forEach((entry) => {
+      const cat = entry.category || "khac";
+      stats[cat] = (stats[cat] || 0) + 1;
+    });
+
+    res.json(stats);
+  } catch (err) {
+    console.error("Lỗi khi thống kê category:", err);
+    res.status(500).json({ error: "Không thể thống kê category." });
   }
 });
 

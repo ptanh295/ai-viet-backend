@@ -1,11 +1,6 @@
-# AI Văn Hóa Backend
+# AI Văn Hóa Backend (GPT-only)
 
-Backend tạo nội dung văn hóa từ prompt + ảnh minh hoạ, dùng OpenAI GPT và DALL·E.
-
-## API chính
-- `POST /generate-content` với `prompt` và `category`
-- `GET /history`
-- `GET /dashboard-summary`
+Chỉ tạo nội dung bằng GPT (bỏ ảnh do quota hết).
 
 ## Cài đặt
 ```
