@@ -1,4 +1,3 @@
-// backend/index.js
 import express from "express";
 import cors from "cors";
 import bodyParser from "body-parser";
@@ -21,11 +20,11 @@ const openai = new OpenAI({
 
 const dataFile = path.join("./", "history.json");
 
-function saveToHistory(prompt, text, image_url) {
+function saveToHistory(prompt, text, image_url, category) {
   const history = fs.existsSync(dataFile)
     ? JSON.parse(fs.readFileSync(dataFile))
     : [];
-  history.push({ prompt, text, image_url, createdAt: new Date().toISOString() });
+  history.push({ prompt, text, image_url, category, createdAt: new Date().toISOString() });
   fs.writeFileSync(dataFile, JSON.stringify(history, null, 2));
 }
 
@@ -34,7 +33,7 @@ app.get("/", (req, res) => {
 });
 
 app.post("/generate-content", async (req, res) => {
-  const { prompt } = req.body;
+  const { prompt, category } = req.body;
 
   if (!prompt) {
     return res.status(400).json({ error: "Prompt is required" });
@@ -65,7 +64,7 @@ app.post("/generate-content", async (req, res) => {
 
     const image_url = imageResponse.data[0].url;
 
-    saveToHistory(prompt, text, image_url);
+    saveToHistory(prompt, text, image_url, category);
 
     res.json({ text, image_url });
   } catch (err) {
